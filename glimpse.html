@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Glimpse</title>
+    <script src="//cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r74/three.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+    <style>
+        #glimpse{
+            height: 100%;
+            width: 100%;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="glimpse"></div>
+<script>
+    var g;
+    var re = function(){
+        $('#glimpse').height($( window ).height());
+        $('#glimpse').width($( window ).width());
+        g.resize({height: $( window ).height(), width: $( window ).width()});
+    };
+
+    $(window).on('resize', re);
+    function getGlimpseId() {
+        return location.href.trim('/').split('/').pop();
+    }
+    function loadGlimpse(id) {
+        var socket = io('/');//io('http://'+json.url);
+        socket.emit('glimpse:load',{id:id})
+        socket.on('glimpse:start', function (data) {
+            $('<script>').attr('type', 'text/javascript').text(data.impl).appendTo('body');
+            try {
+                g = new Glimpse({host: socket, element: document.getElementById('glimpse')});
+                re();                
+            } catch (e) {
+                console.log('Invalid glimpse.', e);
+            }
+            //handle reconnect
+            socket.on('connect', function() {
+                socket.emit('glimpse:rejoin',{id:id})
+            });
+        });
+    }
+    loadGlimpse(getGlimpseId());
+</script>
+
+</body>
+</html>
