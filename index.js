@@ -7,7 +7,7 @@ var io = require('socket.io')(http);
 var middleware = require('socketio-wildcard')();
 var socket = require('./lib/socket.js');
 var GlimpseManager = require('./lib/GlimpseManager.js');
-var Db = require('./lib/db.js');
+var Db = require('./lib/Db.js');
 
 var manager = new GlimpseManager(new Db(process.env.DOCDB_HOST, process.env.DOCDB_KEY));
 
