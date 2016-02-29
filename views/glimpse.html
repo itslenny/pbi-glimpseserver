@@ -40,7 +40,7 @@
         socket.on('glimpse:start', function (data) {
             $('<script>').attr('type', 'text/javascript').text(data.impl).appendTo('body');
             try {
-                g = new Glimpse({host: socket, element: document.getElementById('glimpse')});
+                g = new Glimpse({host: socket, element: document.getElementById('glimpse'), data: data.data});
                 re();                
             } catch (e) {
                 console.log('Invalid glimpse.', e);
