@@ -19,6 +19,13 @@ app.get('/glimpse/:id', function(req, res, next){
     res.sendFile(path.join(__dirname, 'views', 'glimpse.html'));
 });
 
+app.get('/glimpse/:id/delete', function(req, res, next){
+    if(!manager.exists(req.params.id)) return next();
+    manager.delete(req.params.id);
+    res.send('Glimpse Deleted');
+});
+
+
 //catch-all error page
 app.get('*', function(req, res){
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
